@@ -1,8 +1,13 @@
 {
-  "manifest_version": 2,
-  "name": "Youtube Video Bookmarker",
+  "manifest_version": 3,
+  "name": "YouTube Video Bookmarker",
   "description": "Mark a section of the YouTube video, then play it again.",
   "version": "1.0",
+  "permissions": ["storage", "tabs"],
+  "host_permissions": ["https://*.youtube.com/*"],
+  "background": {
+    "service_worker": "scripts/background.js"
+  },
   "icons": {
     "16": "assets/icon.svg",
     "32": "assets/icon.svg",
@@ -14,5 +19,14 @@
       "js": ["scripts/content.js"],
       "matches": ["https://*.youtube.com/*"]
     }
-  ]
+  ],
+  "action": {
+    "default_icon": {
+      "16": "assets/icon.svg",
+      "24": "assets/icon.svg",
+      "32": "assets/icon.svg"
+    },
+    "default_title": "YouTube Bookmarks",
+    "default_popup": "popup.html"
+  }
 }
