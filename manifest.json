@@ -1,0 +1,18 @@
+{
+  "manifest_version": 2,
+  "name": "Youtube Video Bookmarker",
+  "description": "Mark a section of the YouTube video, then play it again.",
+  "version": "1.0",
+  "icons": {
+    "16": "assets/icon.svg",
+    "32": "assets/icon.svg",
+    "48": "assets/icon.svg",
+    "128": "assets/icon.svg"
+  },
+  "content_scripts": [
+    {
+      "js": ["scripts/content.js"],
+      "matches": ["https://*.youtube.com/*"]
+    }
+  ]
+}
