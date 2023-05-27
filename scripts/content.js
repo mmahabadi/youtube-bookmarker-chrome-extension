@@ -1,8 +1,14 @@
 (() => {
   const bookmarkBtnId = "yt-chrome-extension-bookmark-btn";
+  let youtubePlayer;
+  let currentVideo = "";
+  let currentVideoBookmarks = [];
 
   chrome.runtime.onMessage.addListener((obj, sender, response) => {
-    console.log("response", obj);
+    const { videoId } = obj;
+    currentVideo = videoId;
+
+    addBookmarkButton();
   });
 
   const generateIcon = () => {
@@ -39,18 +45,65 @@
     return container;
   };
 
-  const newVideoLoaded = () => {
+  const addBookmarkButton = async () => {
     const bookmarkBtnExist = document.getElementById(bookmarkBtnId);
+    currentVideoBookmarks = await getBookmarks();
 
     if (!bookmarkBtnExist) {
       const bookmarkBtn = generateIcon();
 
       const youtubeControlls =
         document.getElementsByClassName("ytp-left-controls")[0];
+      youtubePlayer = document.getElementsByClassName("video-stream")[0];
 
       youtubeControlls.appendChild(bookmarkBtn);
+
+      bookmarkBtn.addEventListener("click", handleBookmarkBtnClick);
     }
   };
 
-  newVideoLoaded();
+  const handleBookmarkBtnClick = () => {
+    const time = youtubePlayer.currentTime;
+    const bookmark = {
+      time,
+      desc: `Bookmark at ${convertTimestampToTime(time)}`,
+    };
+
+    updateBookmarks(bookmark);
+  };
+
+  const convertTimestampToTime = (timestamp) => {
+    const time = new Date(0);
+    time.setSeconds(timestamp);
+
+    return time.toISOString().substr(11, 8);
+  };
+
+  const updateBookmarks = async (bookmark) => {
+    const bookmarks = await getBookmarks();
+
+    if (!bookmarks.find((item) => item.time == bookmark.time)) {
+      currentVideoBookmarks = [...bookmarks, bookmark].sort(
+        (a, b) => a.time - b.time
+      );
+
+      chrome.storage.sync.set({
+        [currentVideo]: JSON.stringify(currentVideoBookmarks),
+      });
+    }
+  };
+
+  const getBookmarks = () => {
+    return new Promise((resolve) => {
+      if (currentVideo) {
+        chrome.storage.sync.get([currentVideo], (bookmarks) => {
+          const currentVideoBookmarks = bookmarks[currentVideo];
+
+          resolve(
+            currentVideoBookmarks ? JSON.parse(currentVideoBookmarks) : []
+          );
+        });
+      }
+    });
+  };
 })();
