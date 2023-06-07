@@ -1,6 +1,6 @@
 # YouTube Video Bookmarker Chrome Extension
 
-The YouTube Video Bookmarker is a Chrome extension that allows you to bookmark and save specific YouTube videos for easy access later.
+The YouTube Video Bookmarker is a Chrome extension that allows you to bookmark and save specific parts of YouTube videos for easy access later.
 
 ## Features
 
