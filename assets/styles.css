@@ -1,0 +1,21 @@
+.container{
+    min-width: 250px;
+}
+.container .bookmark{
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 5px;
+    margin-bottom: 5px;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+.container .bookmark:last-of-type{
+    border: 0;
+}
+.bookmark-controls img{
+    width: 30px;
+    height: 30px;
+}
+.bookmark-controls img:hover{
+    cursor: pointer;
+}

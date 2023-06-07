@@ -2,12 +2,20 @@
   const bookmarkBtnId = "yt-chrome-extension-bookmark-btn";
   let youtubePlayer;
   let currentVideo = "";
-  let currentVideoBookmarks = [];
 
-  chrome.runtime.onMessage.addListener((obj, sender, response) => {
-    const { videoId } = obj;
-    currentVideo = videoId;
+  chrome.runtime.onMessage.addListener(async (obj) => {
+    const { type, videoId, value } = obj;
 
+    if (type === "NEW") {
+      currentVideo = videoId;
+    } else if (type === "PLAY") {
+      youtubePlayer.currentTime = value;
+    } else if (type === "DELETE") {
+      const bookmarks = await getBookmarks();
+      const currentVideoBookmarks = bookmarks.filter((b) => b.time != value);
+
+      updateBookmarks(currentVideo, currentVideoBookmarks);
+    }
     addBookmarkButton();
   });
 
@@ -69,7 +77,7 @@
       desc: `Bookmark at ${convertTimestampToTime(time)}`,
     };
 
-    updateBookmarks(bookmark);
+    addBookmarks(bookmark);
   };
 
   const convertTimestampToTime = (timestamp) => {
@@ -79,7 +87,7 @@
     return time.toISOString().substr(11, 8);
   };
 
-  const updateBookmarks = async (bookmark) => {
+  const addBookmarks = async (bookmark) => {
     const bookmarks = await getBookmarks();
 
     if (!bookmarks.find((item) => item.time == bookmark.time)) {
@@ -87,10 +95,14 @@
         (a, b) => a.time - b.time
       );
 
-      chrome.storage.sync.set({
-        [currentVideo]: JSON.stringify(currentVideoBookmarks),
-      });
+      updateBookmarks(currentVideo, currentVideoBookmarks);
     }
+  };
+
+  const updateBookmarks = async (currentVideo, bookmarks) => {
+    chrome.storage.sync.set({
+      [currentVideo]: JSON.stringify(bookmarks),
+    });
   };
 
   const getBookmarks = () => {

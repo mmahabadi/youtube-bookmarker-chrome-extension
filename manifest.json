@@ -9,10 +9,10 @@
     "service_worker": "scripts/background.js"
   },
   "icons": {
-    "16": "assets/icon.svg",
-    "32": "assets/icon.svg",
-    "48": "assets/icon.svg",
-    "128": "assets/icon.svg"
+    "16": "assets/icon.png",
+    "32": "assets/icon.png",
+    "48": "assets/icon.png",
+    "128": "assets/icon.png"
   },
   "content_scripts": [
     {
@@ -22,9 +22,9 @@
   ],
   "action": {
     "default_icon": {
-      "16": "assets/icon.svg",
-      "24": "assets/icon.svg",
-      "32": "assets/icon.svg"
+      "16": "assets/icon.png",
+      "24": "assets/icon.png",
+      "32": "assets/icon.png"
     },
     "default_title": "YouTube Bookmarks",
     "default_popup": "popup.html"
